@@ -1,0 +1,34 @@
+version: '3.3'
+services:
+    influxdb:
+        ports:
+            - '8086:8086'
+        volumes:
+            - ./influxdb:/var/lib/influxdb'
+            - ./influxdb:/var/lib/influxdb
+            - ./influxdb:/etc/influxdb
+        environment:
+            - TZ=" America/Argentina/Buenos_Aires"
+            - DOCKER_INFLUXDB_INIT_MODE=upgrade
+            - DOCKER_INFLUXDB_INIT_USERNAME=iot4
+            - DOCKER_INFLUXDB_INIT_PASSWORD=iot4pass
+            - DOCKER_INFLUXDB_INIT_ORG=iot4
+            - DOCKER_INFLUXDB_INIT_BUCKET=iot4
+        image: influxdb:1.8
+    node-red:
+        ports:
+            - '1880:1880'
+        volumes:
+            - ../nodered:/data'
+        container_name: mynodered
+        image: nodered/node-red
+
+    mosquitto:
+        image: eclipse-mosquitto
+        volumes:
+           - ./mosquitto/config/:/mosquitto/config
+           - ./mosquitto/data/:/mosquitto/data
+           - ./mosquitto/log/:/mosquitto/log  
+        ports:
+           - 1883:1883
+           - 9001:9001
