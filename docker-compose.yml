@@ -1,6 +1,7 @@
 version: '3.3'
 services:
     influxdb:
+        container_name: influxdb
         ports:
             - '8086:8086'
         volumes:
@@ -16,6 +17,7 @@ services:
             - DOCKER_INFLUXDB_INIT_BUCKET=iot4
         image: influxdb:1.8
     node-red:
+        container_name: nodered
         ports:
             - '1880:1880'
         volumes:
@@ -24,15 +26,15 @@ services:
         image: nodered/node-red
 
     mosquitto:
+        container_name: mqtt
         image: eclipse-mosquitto
         volumes:
            - ./mosquitto/config/:/mosquitto/config
            - ./mosquitto/data/:/mosquitto/data
-           - ./mosquitto/log/:/mosquitto/log  
+           - ./mosquitto/log/:/mosquitto/log
         ports:
-           - 1883:1883
-           - 9001:9001
-           
+          - 1883:1883
+          - 9001:9001
     grafana:
        container_name: grafana
        image: grafana/grafana
@@ -41,3 +43,16 @@ services:
        volumes:
            - ./grafana/:/etc/grafana/provisioning
            - ./grafana/:/var/lib/grafana/dashboards
+
+
+    telegraf:
+       container_name: telegraf
+       image: telegraf:1.18-alpine
+       volumes:
+           - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:rw
+       depends_on:
+           - influxdb
+       links:
+           - influxdb
+       ports:
+           - 8125:8125
