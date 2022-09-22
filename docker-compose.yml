@@ -16,6 +16,7 @@ services:
             - DOCKER_INFLUXDB_INIT_ORG=iot4
             - DOCKER_INFLUXDB_INIT_BUCKET=iot4
         image: influxdb:1.8
+        restart: always
     node-red:
         container_name: nodered
         ports:
@@ -24,7 +25,7 @@ services:
             - ../nodered:/data'
         container_name: mynodered
         image: nodered/node-red
-
+        restart: always
     mosquitto:
         container_name: mqtt
         image: eclipse-mosquitto
@@ -35,6 +36,7 @@ services:
         ports:
           - 1883:1883
           - 9001:9001
+        restart: always
     grafana:
        container_name: grafana
        image: grafana/grafana
@@ -43,6 +45,7 @@ services:
        volumes:
            - ./grafana/:/etc/grafana/provisioning
            - ./grafana/:/var/lib/grafana/dashboards
+       restart: always
     telegraf:
        container_name: telegraf
        image: telegraf:1.18-alpine
@@ -54,3 +57,4 @@ services:
            - influxdb
        ports:
            - 8125:8125
+       restart: always
